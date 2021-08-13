@@ -1,45 +1,44 @@
-import React, {Component} from 'react'
+import React, { useEffect, useRef, useState} from 'react'
 
-class Clock extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
+const Clock = (props) => {
+  const [state, setState] = useState({date: new Date()})
+  const intervalRef = useRef()
 
-  tick() {
+  const tick = () => {
     console.info('Function tick called', ['tick']);
-    this.setState({date: new Date()});
+    setState({date: new Date()});
   }
 
-  componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 1000);
-    console.info('Component Mounted', ['componentDidMount', this.timerID]);
-  }
+  // componentDidMount
+  useEffect(() => {
+    const id = setInterval(() => tick(), 1000);
+    console.info('Component Mounted', ['componentDidMount', id]);
+    intervalRef.current = id;
+  }, []);
 
-  componentWillUnmount() {
-    console.info('Component Unmounted', ['componentWillUnmount']);
-    clearInterval(this.timerID);
-  }
-
-  componentDidUpdate () {
+  // componentDidUpdate
+  useEffect(() => {
     console.info('Component Updated', ['componentDidUpdate']);
-  }
+  }, [state]);
 
-  shouldComponentUpdate (nextProps, nextState) {
+  // componentWillUnmount
+  useEffect(() => {
+    return () => {
+      console.info('Component Unmounted', ['componentWillUnmount']);
+      clearInterval(intervalRef.current);
+    }
+  }, []);
+  
+  /*   
+    shouldComponentUpdate: Não se aplica, mas daria para usar o memo
+  */
 
-    const shouldBeUpdated = this.state.date < nextState.date;
-    console.info('Component Should Updated', ['shouldComponentUpdate', shouldBeUpdated, nextState.date.toLocaleTimeString()]);
-    return shouldBeUpdated;
-  }
-
-  render() {
-    console.info('Component Rendered', ['render']);
-    return (
-      <div>
-        {<h1>{this.state.date.toLocaleTimeString()}</h1> }
-      </div>
-    )
-  }
+  console.info('Component Rendered', ['render']);
+  return (
+    <div>
+      {<h1>{state.date.toLocaleTimeString()}</h1> }
+    </div>
+  )
 }
 
 export default Clock
