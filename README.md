@@ -1,3 +1,7 @@
+# Project
+
+In this project it is possible to understand the basic lifecycle of a reactjs component by using class (branch: main) and function (branch: hooks).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
